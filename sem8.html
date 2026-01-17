@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SGPA Calculator</title>
+
+<style>
+body, table, input, select, button {
+    font-family: "Times New Roman", Times, serif;
+}
+.passRow { background:#e8f4ff; }
+.failRow { background:#ffe8e8; }
+
+.badge {
+    padding:4px 10px;
+    border-radius:12px;
+    font-weight:bold;
+    font-size:13px;
+    display:inline-block;
+}
+.passBadge { background:#d1fae5; color:#065f46; }
+.failBadge { background:#fee2e2; color:#7f1d1d; }
+
+body{
+    background:#eef2f7;
+    padding:20px;
+}
+h2{text-align:center;}
+.card{
+    background:white;
+    max-width:1200px;
+    margin:auto;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:15px;
+}
+th,td{
+    border:1px solid #ddd;
+    padding:8px;
+    text-align:center;
+}
+th{background:#f1f4f9;}
+input{width:70px;}
+select{width:110px;}
+button{
+    margin:20px auto;
+    display:block;
+    padding:12px 30px;
+    font-size:16px;
+    border:none;
+    background:#2563eb;
+    color:white;
+    border-radius:6px;
+    cursor:pointer;
+}
+button:hover{background:#1e40af;}
+.result{
+    text-align:center;
+    font-size:22px;
+    font-weight:bold;
+}
+.left{text-align:left;}
+.small{text-align:center;font-size:14px;color:#555;}
+
+.disclaimer{
+    background:#fff3cd;
+    border:1px solid #ffeeba;
+    padding:12px;
+    margin:10px auto 20px;
+    max-width:1200px;
+    font-size:14px;
+}
+.confirm-box{
+    text-align:center;
+    margin-top:15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="disclaimer">
+⚠️ <b>Disclaimer:</b> This portal is an <b>Expected SGPA Calculator</b> created for academic self-evaluation only.
+It is <b>NOT an official university result portal</b>.
+</div>
+
+<h2>B.Tech VIII Semester – Expected SGPA Evaluation Portal (EEE)</h2>
+<p class="small">
+<em>~ Developed by Mohammed Shahid Azeez, 324103314070, Department of EEE</em>
+</p>
+
+<div class="card">
+<table id="sgpaTable">
+<tr>
+<th>Course Code</th>
+<th>Course Name</th>
+<th>Credits</th>
+<th>Course Type</th>
+<th>Mode</th>
+<th>Internal</th>
+<th>External</th>
+<th>Total</th>
+<th>Select Grade</th>
+<th>Expected Result</th>
+</tr>
+</table>
+
+<div class="confirm-box">
+<label>
+<input type="checkbox" id="confirmBox">
+ I understand that this is <b>not an official result</b> and is only for self-evaluation.
+</label>
+</div>
+
+<button onclick="calculate()">Calculate SGPA</button>
+<div class="result" id="result"></div>
+</div>
+
+<script>
+/* ===================== SEMESTER-VIII SUBJECT ===================== */
+const subjects = [
+["22EE11PW","Project Work",12,"Lab"]
+];
+
+const table = document.getElementById("sgpaTable");
+
+subjects.forEach((s,i)=>{
+    let row = table.insertRow();
+    row.innerHTML = `
+    <td>${s[0]}</td>
+    <td class="left">${s[1]}</td>
+    <td>${s[2]}</td>
+    <td>${s[3]}</td>
+    <td>
+        <select id="mode${i}" onchange="toggleMode(${i})">
+            <option value="marks">Marks</option>
+            <option value="grade">Grade</option>
+        </select>
+    </td>
+    <td><input id="int${i}"></td>
+    <td><input id="ext${i}"></td>
+    <td id="tot${i}">-</td>
+    <td>
+        <select id="selg${i}" disabled>
+            <option>A+</option><option>A</option><option>B</option>
+            <option>C</option><option>D</option><option>E</option><option>F</option>
+        </select>
+    </td>
+    <td id="exp${i}">-</td>
+    `;
+});
+
+function gradeFromMarks(m){
+    if(m>=90) return "A+";
+    if(m>=80) return "A";
+    if(m>=70) return "B";
+    if(m>=60) return "C";
+    if(m>=50) return "D";
+    if(m>=40) return "E";
+    return "F";
+}
+function gpFromGrade(g){
+    return {"A+":10,"A":9,"B":8,"C":7,"D":6,"E":5,"F":0}[g];
+}
+function toggleMode(i){
+    let mode=document.getElementById("mode"+i).value;
+    document.getElementById("int"+i).disabled = (mode==="grade");
+    document.getElementById("ext"+i).disabled = (mode==="grade");
+    document.getElementById("selg"+i).disabled = (mode==="marks");
+}
+
+function calculate(){
+    if(!confirmBox.checked){
+        alert("Please confirm the disclaimer before calculating SGPA.");
+        return;
+    }
+
+    let totalPoints=0, totalCredits=0;
+
+    let row=table.rows[1];
+    row.classList.remove("passRow","failRow");
+
+    let credits=subjects[0][2];
+    let internal=parseInt(document.getElementById("int0").value||0);
+    let external=parseInt(document.getElementById("ext0").value||0);
+    let total=0, grade="", resultHTML="";
+
+    let mode=document.getElementById("mode0").value;
+
+    if(mode==="marks"){
+        if(internal>50 || external>50){
+            alert("Project marks exceeded limit (50 + 50)");
+            return;
+        }
+        total = internal + external;
+        grade = (external<25 || total<50) ? "F" : gradeFromMarks(total);
+    } else {
+        grade = document.getElementById("selg0").value;
+        total = grade;
+    }
+
+    resultHTML = grade==="F" ?
+        `<span class="badge failBadge">FAIL</span>` :
+        `<span class="badge passBadge">${grade}</span>`;
+
+    let gp = gpFromGrade(grade);
+    totalCredits = credits;
+    if(gp===0){
+        row.classList.add("failRow");
+    }else{
+        row.classList.add("passRow");
+        totalPoints = gp * credits;
+    }
+
+    document.getElementById("tot0").innerHTML = total;
+    document.getElementById("exp0").innerHTML = resultHTML;
+
+    document.getElementById("result").innerHTML =
+        "Your Expected SGPA: " + (totalPoints / totalCredits).toFixed(2);
+}
+</script>
+
+</body>
+</html>

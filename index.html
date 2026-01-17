@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>B.Tech EEE – SGPA Calculator Portal</title>
+
+<style>
+body{
+    font-family:"Times New Roman", Times, serif;
+    background:#eef2f7;
+    margin:0;
+}
+
+/* HEADER */
+.header{
+    background:#1e3a8a;
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+.header h1{
+    margin:0;
+    font-size:26px;
+}
+.header p{
+    margin:5px 0 0;
+    font-size:15px;
+    font-style:italic;
+}
+
+/* MAIN */
+.main{
+    padding:40px 20px;
+}
+
+/* CONTAINER */
+.container{
+    max-width:1000px;
+    margin:auto;
+}
+
+/* GRID */
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+    gap:20px;
+}
+
+/* CARD */
+.sem-card{
+    background:white;
+    border-radius:10px;
+    padding:20px;
+    text-align:center;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+    transition:transform 0.2s;
+}
+.sem-card:hover{
+    transform:translateY(-5px);
+}
+
+.sem-card h3{
+    margin:0;
+    font-size:20px;
+    color:#1e3a8a;
+}
+.sem-card p{
+    font-size:14px;
+    color:#555;
+    margin:10px 0 15px;
+}
+.sem-card button{
+    padding:10px 18px;
+    font-size:15px;
+    border:none;
+    background:#2563eb;
+    color:white;
+    border-radius:6px;
+    cursor:pointer;
+}
+.sem-card button:hover{
+    background:#1e40af;
+}
+
+/* CGPA SPECIAL CARD */
+.cgpa-card{
+    margin-top:40px;
+    border:2px solid #1e3a8a;
+    background:#f8fbff;
+}
+
+/* RULES */
+.rules{
+    margin-top:30px;
+}
+.rules summary{
+    font-weight:bold;
+    cursor:pointer;
+    font-size:16px;
+    color:#1e3a8a;
+}
+.rules ul{
+    margin-top:10px;
+    font-size:14px;
+}
+
+/* NOTE */
+.note{
+    margin-top:20px;
+    font-size:13px;
+    color:#7a1f1f;
+    text-align:center;
+}
+
+/* FOOTER */
+.footer{
+    background:#f1f5f9;
+    text-align:center;
+    padding:12px;
+    font-size:14px;
+    color:#555;
+    margin-top:30px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>B.Tech EEE Academic Evaluation Portal</h1>
+    <p>Expected SGPA & CGPA Calculator – Self Evaluation Tool</p>
+   <p>~Developed by Mohammed Shahid Azeez, 324103314070, Department of EEE</p>
+</div>
+
+<div class="main">
+<div class="container">
+
+    <!-- SEMESTER GRID -->
+    <div class="grid">
+        <div class="sem-card">
+            <h3>Semester I</h3>
+            <p>Total Credits: 19.5</p>
+            <button onclick="location.href='sem1.html'">Calculate SGPA</button>
+        </div>
+
+        <div class="sem-card">
+            <h3>Semester II</h3>
+            <p>Total Credits: 19.5</p>
+            <button onclick="location.href='sem2.html'">Calculate SGPA</button>
+        </div>
+
+        <div class="sem-card">
+            <h3>Semester III</h3>
+            <p>Total Credits: 21.5</p>
+            <button onclick="location.href='sem3.html'">Calculate SGPA</button>
+        </div>
+
+        <div class="sem-card">
+            <h3>Semester IV</h3>
+            <p>Total Credits: 21.5</p>
+            <button onclick="location.href='sem4.html'">Calculate SGPA</button>
+        </div>
+
+        <div class="sem-card">
+            <h3>Semester V</h3>
+            <p>Total Credits: 21.5</p>
+            <button onclick="location.href='sem5.html'">Calculate SGPA</button>
+        </div>
+
+        <div class="sem-card">
+            <h3>Semester VI</h3>
+            <p>Total Credits: 21.5</p>
+            <button onclick="location.href='sem6.html'">Calculate SGPA</button>
+        </div>
+
+        <div class="sem-card">
+            <h3>Semester VII</h3>
+            <p>Total Credits: 23</p>
+            <button onclick="location.href='sem7.html'">Calculate SGPA</button>
+        </div>
+
+        <div class="sem-card">
+            <h3>Semester VIII</h3>
+            <p>Total Credits: 12</p>
+            <button onclick="location.href='sem8.html'">Calculate SGPA</button>
+        </div>
+    </div>
+
+    <!-- CGPA CARD -->
+    <div class="sem-card cgpa-card">
+        <h3>CGPA Calculator</h3>
+        <p>Overall CGPA (Regular & Lateral Students)</p>
+        <button onclick="location.href='cgpa.html'">Calculate CGPA</button>
+    </div>
+
+    <!-- RULES -->
+    <details class="rules">
+    <summary>📘 Academic Evaluation Criteria</summary>
+    <ul>
+        <li><b>Theory Courses:</b> Internal (Max 30) + External (Max 70)<br>
+            Minimum requirement: External ≥ 28 and Total ≥ 40</li>
+
+        <li><b>Laboratory Courses:</b> Internal (Max 50) + External (Max 50)<br>
+            Minimum requirement: External ≥ 25 and Total ≥ 50</li>
+
+        <li><b>Skill Oriented Courses:</b> Internal (Max 25) + External (Max 75)<br>
+            Evaluation as per prescribed skill assessment norms</li>
+
+        <li><b>Non-Credit Mandatory Courses:</b> Evaluated on a Pass / Fail basis<br>
+            Not considered for SGPA or CGPA calculation</li>
+
+        <li><b>Grade Point Mapping:</b><br>
+            A+ = 10, A = 9, B = 8, C = 7, D = 6, E = 5, F = 0</li>
+
+        <li><b>SGPA / CGPA Calculation:</b><br>
+            Computed using credit-weighted average as per academic regulations</li>
+    </ul>
+</details>
+
+
+    <div class="note">
+        ⚠️ This portal is for self-evaluation only and is not an official university result portal.
+    </div>
+
+</div>
+</div>
+<div class="footer">
+    © 2025 B.Tech EEE Academic Tools |
+    Developed by <em>Mohammed Shahid Azeez</em>, Department of EEE
+</div>
+</body>
+</html>

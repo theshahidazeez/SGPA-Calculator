@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>CGPA Calculator – B.Tech EEE</title>
+
+<style>
+body{
+    font-family:"Times New Roman", Times, serif;
+    background:#eef2f7;
+    margin:0;
+}
+.header{
+    background:#1e3a8a;
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+.header h1{margin:0;font-size:26px;}
+.header p{margin:5px 0 0;font-size:15px;font-style:italic;}
+
+.main{padding:30px;}
+.card{
+    background:white;
+    max-width:850px;
+    margin:auto;
+    padding:25px;
+    border-radius:10px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+label{font-weight:bold;}
+select,input{padding:6px;margin:5px;}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
+th,td{
+    border:1px solid #ddd;
+    padding:8px;
+    text-align:center;
+}
+th{background:#f1f4f9;}
+
+button{
+    margin-top:20px;
+    padding:12px 25px;
+    font-size:16px;
+    border:none;
+    background:#2563eb;
+    color:white;
+    border-radius:6px;
+    cursor:pointer;
+}
+button:hover{background:#1e40af;}
+
+.result{
+    margin-top:20px;
+    font-size:22px;
+    font-weight:bold;
+    text-align:center;
+}
+
+.note{
+    margin-top:15px;
+    font-size:13px;
+    color:#7a1f1f;
+    text-align:center;
+}
+
+.footer{
+    margin-top:30px;
+    background:#f1f5f9;
+    padding:12px;
+    text-align:center;
+    font-size:14px;
+}
+.highlight{
+    font-weight:bold;
+    color:#1e3a8a;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>B.Tech EEE – CGPA Evaluation Portal</h1>
+    <p>Expected CGPA Calculator (Regular & Lateral Students)</p>
+</div>
+
+<div class="main">
+<div class="card">
+
+<!-- STUDENT TYPE -->
+<label>Student Type:</label>
+<select id="studentType" onchange="updateCompletedSemOptions()">
+    <option value="">-- Select --</option>
+    <option value="regular">Regular Student</option>
+    <option value="lateral">Lateral Entry Student</option>
+</select>
+
+<br><br>
+
+<!-- COMPLETED SEM -->
+<label>Completed Up To Semester:</label>
+<select id="completedSem" onchange="buildTable()">
+    <option value="">-- Select --</option>
+</select>
+
+<!-- TABLE -->
+<table id="cgpaTable" style="display:none;">
+<tr>
+    <th>Semester</th>
+    <th>SGPA</th>
+    <th>Credits</th>
+</tr>
+</table>
+
+<div style="text-align:center;">
+    <button onclick="calculateCGPA()">Calculate CGPA</button>
+</div>
+
+<div class="result" id="result"></div>
+
+<div class="note">
+⚠️ CGPA is calculated based on applicable semesters and official credit structure.<br>
+This tool is for self-evaluation only.
+</div>
+
+</div>
+</div>
+
+<div class="footer">
+    <span class="highlight">Mohammed Shahid Azeez</span> (324103314070) <br>
+    Department of Electrical & Electronics Engineering <br>
+    📞 +91 8897457968 | 📧 324103314070@gvpce.ac.in
+</div>
+
+<script>
+/* Semester Credits */
+const credits = {
+    1:19.5, 2:19.5, 3:21.5, 4:21.5,
+    5:21.5, 6:21.5, 7:23, 8:12
+};
+
+/* Update completed semester options based on student type */
+function updateCompletedSemOptions(){
+    const type = document.getElementById("studentType").value;
+    const completedSem = document.getElementById("completedSem");
+
+    completedSem.innerHTML = `<option value="">-- Select --</option>`;
+    document.getElementById("cgpaTable").style.display = "none";
+    document.getElementById("result").innerHTML = "";
+
+    if(type === "regular"){
+        for(let s=1; s<=8; s++){
+            completedSem.innerHTML +=
+                `<option value="${s}">Semester ${s}</option>`;
+        }
+    }
+    else if(type === "lateral"){
+        for(let s=3; s<=8; s++){
+            completedSem.innerHTML +=
+                `<option value="${s}">Semester ${s}</option>`;
+        }
+    }
+}
+
+/* Build table */
+function buildTable(){
+    const type = document.getElementById("studentType").value;
+    const end = parseInt(document.getElementById("completedSem").value);
+    if(!type || !end) return;
+
+    const start = (type === "lateral") ? 3 : 1;
+    const table = document.getElementById("cgpaTable");
+
+    table.innerHTML = `
+        <tr>
+            <th>Semester</th>
+            <th>SGPA</th>
+            <th>Credits</th>
+        </tr>
+    `;
+
+    for(let s=start; s<=end; s++){
+        let row = table.insertRow();
+        row.innerHTML = `
+            <td>Semester ${s}</td>
+            <td><input id="sgpa${s}" placeholder="0 – 10"></td>
+            <td>${credits[s]}</td>
+        `;
+    }
+
+    table.style.display = "table";
+}
+
+/* Calculate CGPA */
+function calculateCGPA(){
+    const type = document.getElementById("studentType").value;
+    const end = parseInt(document.getElementById("completedSem").value);
+
+    if(!type || !end){
+        alert("Please select student type and completed semester.");
+        return;
+    }
+
+    const start = (type === "lateral") ? 3 : 1;
+    let totalPoints = 0, totalCredits = 0;
+
+    for(let s=start; s<=end; s++){
+        let sgpa = parseFloat(document.getElementById("sgpa"+s).value);
+        if(isNaN(sgpa) || sgpa < 0 || sgpa > 10){
+            alert("Enter valid SGPA (0–10) for Semester " + s);
+            return;
+        }
+        totalPoints += sgpa * credits[s];
+        totalCredits += credits[s];
+    }
+
+    let cgpa = totalPoints / totalCredits;
+    document.getElementById("result").innerHTML =
+        "Your Expected CGPA: " + cgpa.toFixed(2);
+}
+</script>
+
+</body>
+</html>
